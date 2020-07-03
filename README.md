@@ -1,5 +1,8 @@
 # graceful-shutdown
 
+#Running application
+pm2 [start|restart|stop|delete] ecosystem.config.js
+
 #ecosystem for pm2 
  ```module.exports = {
   apps : [{
@@ -25,3 +28,4 @@
     }
   }
 };```
+
