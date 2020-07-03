@@ -40,7 +40,7 @@ app.get('/user', async (req, res) => {
         const users = await User.find();
         setTimeout(() => {
           res.status(200).send(users)
-        }, 4000);
+        }, 5000);
     } catch (error) {
         
     }
