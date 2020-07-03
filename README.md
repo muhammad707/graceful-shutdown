@@ -1,7 +1,7 @@
 # graceful-shutdown
 
 #ecosystem for pm2 
- module.exports = {
+ ```module.exports = {
   apps : [{
     name: 'server',
     script: './index.js',
@@ -24,4 +24,4 @@
       'pre-setup': ''
     }
   }
-};
+};```
