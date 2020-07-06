@@ -2,8 +2,8 @@ module.exports = {
   apps : [{
     name: 'server',
     script: './index.js',
-    kill_timeout: 3000,
-    restart_delay: 3000,
+    kill_timeout: 2000,
+    restart_delay: 2000,
     env: {
       NODE_ENV: "development",
     },

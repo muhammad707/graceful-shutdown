@@ -19,30 +19,71 @@ mongoose.connect('mongodb://localhost/test707', { useNewUrlParser: true, useUnif
   if (err) throw err;
   console.log('Mongoose connected!');
 });
-const User = mongoose.model('User', { name: String });
+const User = mongoose.model('User', { name: String, age: Number, address: String });
+const User_logs = mongoose.model('User_logs', { userId: String, activeTime: Date })
 
 app.get('/', (req, res) => { res.end('Hello world') })
 
-app.post('/user', async (req, res) => {
+app.post('/user', (req, res) => {
   try {
-    const user = new User({ name: req.body.username });
-    await user.save();
-      res.send('Success!').status(201);
+    const user = new User({ name: req.body.name, age: req.body.age, address: req.body.address });
+    user.save(function(err, obj) {
+      if (err) {
+        res.send(err);
+      } else {
+        const user = obj._id
+        const user_log = new User_logs({ userId: user, activeTime: new Date().getTime() })
+        user_log.save(function(err, log) {
+          if (err) res.send(err)
+          else {
+            setTimeout(() => {
+              res.status(200).send(log)
+            }, 1500)
+          }
+        })
+      }
 
-   
+    });
   } catch (err) {
-    res.send(err.message).status(500);
+    throw err
+  }
+});
+
+app.delete('/user/:id', async (req, res) => {
+  try {
+    const userId = req.params.id
+    console.log(userId)
+    const user = await User.findByIdAndDelete(userId);
+    console.log(user)
+    if(user) {
+      const userLog = await User_logs.findOneAndDelete({ userId: userId });
+      setTimeout(() => {
+        res.send({
+          message: 'Delete success',
+          user_log: userLog
+        });
+      }, 1500);
+    }
+  } catch (error) {
+    throw error
+  }
+});
+
+app.get('/user_logs', async (req, res) => {
+  try {
+    const users = await User_logs.find();
+    res.send(users)
+  } catch (error) {
+    res.send(err)
   }
 });
 
 app.get('/user', async (req, res) => {
     try {
-        const users = await User.find();
-        setTimeout(() => {
-          res.status(200).send(users)
-        }, 5000);
+      const users = await User.find();
+      res.status(200).send(users)
     } catch (error) {
-        
+        throw error;
     }
 }); 
 
